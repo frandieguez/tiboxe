@@ -1,0 +1,30 @@
+<h1>Listing concepts</h1>
+
+<table>
+  <tr>
+    <th>English</th>
+    <th>Scope</th>
+    <th>Definition</th>
+    <th>Example</th>
+    <th>Id glossary</th>
+    <th>Is free</th>
+  </tr>
+
+<% for concept in @concepts %>
+  <tr>
+    <td><%# @english_translation.text %></td>
+    <td><%=h concept.scope %></td>
+    <td><%=h concept.definition %></td>
+    <td><%=h concept.example %></td>
+    <td><%=h  concept.glossary_name %></td>
+    <td><%=h concept.is_free %></td>
+    <td><%= link_to image_tag('icons/comment_edit.png'), concept %></td>
+    <td><%= link_to image_tag('icons/server_link.png'), edit_translation_path(concept) %></td>
+    <td><%= link_to image_tag('icons/delete.png'), concept, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to (image_tag 'icons/add.png')+" New concept", new_concept_path %>

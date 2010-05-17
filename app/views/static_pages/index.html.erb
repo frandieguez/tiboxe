@@ -1,0 +1,35 @@
+<div style="margin:0 auto;">
+  <div id="login">
+    <%# link_to 'Iniciar sesión', login_path %>
+  </div>
+  <%=  render :partial => "layouts/form_search" %>
+  <% if false  %>
+    <h1>Listing translations</h1>
+
+    <table>
+      <tr>
+        <th>Texto da tradución</th>
+        <th>Linguaxe</th>
+        <th>Recomendada</th>
+        <th>Parte gramatical</th>
+        <th>Xénero gramatical</th>
+        <th>Número gramatical</th>
+      </tr>
+
+      <% for translation in @translations %>
+        <tr>
+          <td><%= link_to translation.text, translation %></td>
+          <td><%=h translation.language %></td>
+          <td><%=h translation.recommended%></td>
+          <td><%=h translation.partofspeech %></td>
+          <td><%=h  translation.grammaticalgender %></td>
+          <td><%=h translation.grammaticalnumber %></td>
+          <td><%= link_to image_tag('icons/database_edit.png'), edit_translation_path(translation) %></td>
+          <td><%= link_to image_tag('icons/database_delete.png'), translation, :confirm => 'Are you sure?', :method => :delete %></td>
+        </tr>
+      <% end %>
+    </table>
+  <%  end %>
+
+
+</div>

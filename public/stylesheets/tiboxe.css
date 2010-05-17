@@ -1,0 +1,511 @@
+body{
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: none;
+    background-color: #1347c3;
+}
+
+.recommended {
+}
+.tag-recommended{
+    position:absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.translation{
+    position:relative;
+    background:url(../images/cadrado-ficha.png) bottom left no-repeat;
+    width:640px;
+    padding-bottom:10px;
+    margin:20px auto;
+}
+
+.translation-content{
+    padding:5px;
+    margin:0;
+    margin-top:-10px;
+    background:url(../images/cadrado-ficha.png) top left no-repeat;
+}
+
+
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
+
+.clear {
+    position: static;
+    display: block;
+    clear: both;
+}
+
+.odd{
+    
+}
+.left{
+    float:left;
+    clear:both
+}
+.right{
+    float:right;
+    clear:both
+}
+
+.close {
+    color: #1347c3;
+    float: right;
+    border: 1px solid #1347c3;
+    font-size: small;
+    margin: 2px 3px 2px 2px;
+    padding: 0px 2px 0px 2px;
+}
+
+.close a {
+    text-decoration: none;
+}
+
+.close a:hover {
+    color: #234;
+    text-decoration: none;
+}
+
+.close_out {
+    position: relative;
+}
+
+.fuzzy {
+    font-size: 0.7em;
+    color: #696;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:active, a:focus {
+    outline: 0;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a.fuzzy {
+    color: #696;
+}
+
+h1 a:hover {
+    color: #58B;
+    text-decoration: none;
+    font-family:Georgia;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+th {
+    text-align: left;
+}
+
+th, td {
+    padding: 2px 10px;
+    vertical-align: top;
+}
+
+img {
+    border: none;
+}
+
+dl, h1, h2, h3, p, pre, ol, ul.hof {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1 {
+    font-family:georgia;
+    line-height:1em;
+    color:#555;
+    font-style:italic;
+    font-size:1.4em;
+    font-weight:normal;
+}
+td ol {
+    width: auto;
+}
+
+body { color: #333; }
+
+body, p, ol, ul, td {
+  font-family: helvetica, sans-serif;
+  font-size:   13px;
+  line-height: 18px;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+a { color: #000; }
+a:visited { color: #666; }
+
+.fieldWithErrors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+#errorExplanation {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
+
+#wrapper{
+    width:100%;
+    margin:0;
+    padding:0;
+    background:White;
+}
+#conten {
+    width:660px;
+    margin: 0 auto;
+    padding: 0;
+    display:block;
+    background: #fff;
+}
+#results{
+    width:100%;
+    margin:0 auto;
+}
+#result-search-hint{
+    font-family: Georgia;
+    font-size: 1.1em;
+    color: #747fb5;
+    background:url(../images/ico-rss.png) left bottom no-repeat;
+    padding-left:20px;
+}
+#pagination{
+    margin:0 auto;
+}
+#pager{
+    text-align:center;
+    background: #f8f9fb;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    padding:5px;
+    position:relative;
+}
+#pager .back{
+    position:absolute;
+    right:10px;
+    top: 5px;
+}
+
+#logo {
+    padding: 50px 20px 0 20px;
+    text-align: center;
+    margin-bottom:60px;
+}
+#logo img{margin-bottom:20px;}
+
+#blue_box {
+    margin: 0;
+    padding: 0;
+    border: 15px solid #103c93;
+}
+
+#current_locale {
+    color: #fff;
+    background: #103c93;
+    float: right;
+    margin: 0.5em 1em 0 1em;
+}
+
+#current_locale a {
+    color: #fff;
+}
+
+#lang_choice {
+    float: right;
+    margin: 0.5em 1em 0 1em;
+    padding: 0;
+    background: #ecf3f9;
+    border: 1px solid #1347c3;
+}
+
+#lang_choice ul {
+    list-style: none;
+    padding: 0;
+    margin: 5px 5px 5px 5px;
+}
+
+#locale {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+}
+
+#locale img {
+    border: none;
+}
+
+
+#form_small {
+    vertical-align: middle;
+    margin: 10px auto;
+    width: 80%;
+}
+
+#form_small input[type=text] {
+    border: 1px solid #c4d6e4;
+    width: 20em;
+}
+
+#form_small select {
+    border: 1px solid #c4d6e4;
+    width: 100px;
+    height: 1.4em;
+}
+
+#form_small img {
+    float: left;
+    margin-right: 1em;
+}
+
+#form {
+    margin: 0 auto;
+    padding: 15px;
+    width: 80%;
+    background: #ecf3f9;
+    position:relative;
+}
+#form div{
+    margin-bottom:10px;
+}
+
+#form ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#form ul li {
+    margin: 0;
+    padding: 0;
+}
+
+#form_mode {
+    text-align: left
+}
+
+#form_mode a {
+    font-size: small;
+    font-weight: bold;
+    padding: 5px 8px 0 8px;
+    margin: 0;
+    color: #103c93;
+}
+
+#form_mode a:hover {
+    background: #fff;
+    text-decoration: none;
+}
+
+#form_mode ul li {
+    display: inline;
+}
+
+#form_query {
+    background: #fff;
+    margin: 0;
+    padding: 3px 3px 3px 3px;
+}
+
+#form_query input {
+    border: 1px solid #c4d6e4;
+    font-size: large;
+    width: 100%;
+    padding-left:1px
+}
+
+#form_langs {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin: 5px 0 0 0;
+    height: 1.7em;
+}
+
+#form_lang_src {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 1.7em;
+    width: 40%;
+}
+
+#form_lang_dst {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 1.7em;
+    width: 40%;
+}
+
+#form_lang_switch {
+    display: block;
+    height: 1.7em;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#form_submit input {
+    border:none;
+    display: block;
+    margin: 0;
+    padding: 0;
+    position:absolute;
+    top:35px;
+    right:0px;
+    background:url(../images/ico-buscar.png) top left no-repeat;
+    text-indent: -9999px;
+    width: 55px;
+    height: 45px;
+}
+
+#form_submit input {
+    margin: 0;
+    padding: 0;
+}
+
+#stats {
+    background:White;
+    margin: 40px auto 0px auto;
+    padding-bottom:0;
+    font-size: small;
+    text-align: center;
+}
+
+#stats ul {
+    padding: 0 0 30px 0;
+    list-style: none;
+    background:White;
+    display:block;
+}
+
+#stats ul li {
+    display: inline;
+    padding: 0 15px;
+    border-width: 1px;
+    border-color: #999;
+    border-style: none solid none none;
+}
+
+#stats ul li.last {
+    border-style: none;
+}
+#copyright {
+    margin:0 auto;
+    clear:none;
+    color:white;
+    font-size:0.8em;
+    width: 50%;
+    text-align:center
+}
+#copyright a{
+    color:black;
+}
+#bottom {
+    margin: 0;
+    padding: 0;
+    display: block;
+    width: 100%;
+    height: 400px;
+    background:url(../images/bg-bottom.png) repeat-x top;
+}
+#user-nav{
+  float:right;
+}
+
+#nav {
+    font-size: small;
+    margin: 10px auto;
+    padding: 0 15px;
+    width: 50%;
+    background: #1344a7;
+}
+
+#nav a {
+    color: #fff;
+}
+
+#nav ul {
+    margin: 15px 0;
+}
+
+#nav li {
+    margin: 3px 15px;
+}
+
+#nav li:hover {
+    background: #1347c3;
+}
+
+#nav a:hover {
+    text-decoration: none;
+}
+
+#nav ul {
+    list-style: none;
+}
+
+#global {
+    float: left;
+    width: 50%;
+}
+
+#global ul {
+    border-width: 1px;
+    border-color: #969a9d;
+    border-style: none solid none none;
+}
+
+#local {
+    float: left;
+    width: 50%;
+}

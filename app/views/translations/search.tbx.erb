@@ -1,0 +1,44 @@
+<!DOCTYPE martif SYSTEM 'TBXcoreStructV02.dtd'>
+<martif type='TBX' xml:lang='en'>
+  <martifHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>TiBoxe for <%= params[:string] %></title>
+      </titleStmt>
+      <sourceDesc>
+        <p>Glossary results for <%= params[:string] %> on TiBoXe</p>
+      </sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+      <p type='XCSURI'>http://www.lisa.org/fileadmin/standards/tbx/TBXXCSV02.xcs</p>
+    </encodingDesc>
+  </martifHeader>
+  <text>
+    <body>
+      <%  @results.each do |resultado| %>
+      <termEntry>
+	<%= ("<descrip type=\"definition\">"+resultado[1].definition+"</descrip>") if resultado[1].definition != "" %>
+        <%= ("<descrip type=\"subjectField\">"+resultado[1].scope+"</descrip>") if resultado[1].scope != "" %>
+        <%= ("<note>source glossary: "+resultado[1].glossary_name+"</note>") if resultado[1].glossary_name != "" %>
+        <langSet xml:lang="en">
+            
+	    <% resultado[0].each do |result| %><tig>
+		<term><%= result  %></term>
+	    </tig>
+	      <% end %>
+
+        </langSet>
+        <langSet xml:lang="gl"><% resultado[2].map do |trans| %>
+            <tig>
+              <%= "<term>"+trans.text+"</term>"%>
+              <%= (trans.partofspeech != "") ? "<termNote type=\"partOfSpeech\">#{trans.partofspeech}<\/termNote>" : "" %>
+              <%= (trans.grammaticalgender != "") ? "<termNote type=\"grammaticalgender\">#{trans.grammaticalgender}<\/termNote>": "" %>
+              <%= (trans.grammaticalnumber != "") ? "<termNote type=\"grammaticalnumber\">#{trans.grammaticalnumber}<\/termNote>": "" %>
+            </tig>
+          <% end %>
+        </langSet>
+      </termEntry>
+    <% end %>
+    </body>
+  </text>
+</martif>

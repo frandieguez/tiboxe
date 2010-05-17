@@ -1,0 +1,18 @@
+login: &login
+  adapter: mysql
+  username: root
+  password: 1234
+  host: localhost
+
+development:
+  < <: *login
+  database: tiboxe_production
+
+test:
+  <<: *login
+  database: myclient_test
+
+production:
+  <<: *login
+  database: tiboxe_production
+

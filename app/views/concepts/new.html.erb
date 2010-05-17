@@ -1,0 +1,47 @@
+<h1>New concept</h1>
+
+<% form_for(@concept) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :scope %><br />
+    <%= f.text_field :scope %>
+  </p>
+  <p>
+    <%= f.label :definition %><br />
+    <%= f.text_field :definition %>
+  </p>
+  <p>
+    <%= f.label :example %><br />
+    <%= f.text_field :example %>
+  </p>
+  <p>
+    <%= f.label :glossary_name%>
+    <%= select( @concept,
+                "glossary_name",
+                { "Ciberlingua" => "Ciberlingua",
+                  "Guinovart" => "Guinovart",
+                  "Hermida" => "Hermida",
+                  "Mancomun" => "Mancomun",
+                  "Microsoft" => "Microsoft",
+                  "Netbeans" => "Netbeans",
+                  "Palantino Internet" => "Palantino Internet",
+                  "Palantino comercio electronico" => "Palantino comercio electronico",
+                  "SNL da USC" => "SNLUSC",
+                  "San Clemente" => "San clemente",
+                  "Trasno" => "Trasno",
+                  "Xis" => "Xis",
+                  "XisTrasno" => "XisTrasno",
+                  }
+              ) %>
+  </p>
+  <p>
+    <%=  check_box(@concept, "is_free") %>
+    <%= f.label :is_free %>
+  </p>
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', concepts_path %>

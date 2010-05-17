@@ -1,0 +1,60 @@
+<h1>Editing translation</h1>
+
+<% form_for(@translation) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :text %><br />
+    <%= f.text_field :text %>
+  </p>
+    <%= f.label :language %><br />
+    <%= select( "translation",
+                "language",
+                { "Galego" => "gl",
+                  "Inglés" => "en"
+                  }
+              ) %>
+  <p>
+    <%= f.check_box :recommended %> <%= f.label :recommended %>
+  </p>
+  <p>
+    <%= f.label :partofspeech %><br />
+    <%= select( "translation",
+                "partofspeech",
+                { "Sen categoría" => nil,
+                  "Abreviatura" => "abreviatura",
+                  "Coloquial" => "coloquial",
+                  "Interxección" => "interxección",
+                  "Locución" => "locución",
+                  "Nome" => "noun",
+                  "Preposición" => "preposition",
+                  "Sigla" => "sigla",
+                  "Verbo" => "verbo"
+                  }) %>
+  </p>
+  <p>
+    <%= f.label :grammaticalgender %><br />
+    <%= select( "translation", "grammaticalgender", 
+                { "Sen xénero" => nil,
+                  "Masculino" => "masculine",
+                  "Feminino" => "feminine"
+                }) %>
+  </p>
+  <p>
+    <%= f.label :grammaticalnumber %><br />
+    <%= select( "translation",
+                "grammaticalnumber",
+                { "Sen número" => nil,
+                  "Singular" => "singular",
+                  "Plural" => "plural"
+                  }
+              ) %>
+  </p>
+  
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @translation %> |
+<%= link_to 'Back', translations_path %>

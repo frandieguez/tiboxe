@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  scope: MyText
+  definition: MyText
+  example: MyText
+  id_glossary: 1
+  is_free: false
+
+two:
+  scope: MyText
+  definition: MyText
+  example: MyText
+  id_glossary: 1
+  is_free: false

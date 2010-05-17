@@ -1,0 +1,32 @@
+<h1>Editing concept</h1>
+
+<% form_for(@concept) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :scope %><br />
+    <%= f.text_area :scope %>
+  </p>
+  <p>
+    <%= f.label :definition %><br />
+    <%= f.text_area :definition %>
+  </p>
+  <p>
+    <%= f.label :example %><br />
+    <%= f.text_area :example %>
+  </p>
+  <p>
+    <%= f.label :id_glossary %><br />
+    <%= f.text_field :id_glossary %>
+  </p>
+  <p>
+    <%= f.label :is_free %><br />
+    <%= f.check_box :is_free %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @concept %> |
+<%= link_to 'Back', concepts_path %>

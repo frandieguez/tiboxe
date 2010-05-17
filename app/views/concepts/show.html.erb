@@ -1,0 +1,28 @@
+<p>
+  <b>Scope:</b>
+  <%=h @concept.scope %>
+</p>
+
+<p>
+  <b>Definition:</b>
+  <%=h @concept.definition %>
+</p>
+
+<p>
+  <b>Example:</b>
+  <%=h @concept.example %>
+</p>
+
+<p>
+  <b>Id glossary:</b>
+  <%=h @concept.glossary_name %>
+</p>
+
+<p>
+  <b>Is free:</b>
+  <%=h @concept.is_free %>
+</p>
+
+
+<%= link_to 'Edit', edit_concept_path(@concept) %> |
+<%= link_to 'Back', concepts_path %>

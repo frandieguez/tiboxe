@@ -1,0 +1,22 @@
+  <div id="form">
+    <% form_tag ('/search/') do %>
+
+        <div id="form_mode">
+          <%= label_tag(:string, "Insira un termo en ingl&eacute;s para buscalo") %>
+        </div>
+
+        <div id="form_query">
+          <%= text_field_tag(:string) %>
+        </div>
+
+        <div id="form_submit">
+            <%= submit_tag("Buscar") %> ou <small><%= link_to_function "empregue a busca avanzada", "alert('polo momento desactivada')" %></small>
+        </div>
+
+    <% end %>
+  </div>
+
+<script type="javascript" charset="utf8">
+      var string = document.getElementById("string")
+      string.focus();
+</script>

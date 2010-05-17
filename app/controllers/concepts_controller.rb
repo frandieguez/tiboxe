@@ -1,0 +1,3 @@
+class ConceptsController < ApplicationController
+
+end

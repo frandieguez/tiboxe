@@ -1,0 +1,34 @@
+<p>
+  <b>Text:</b>
+  <%=h @translation.text %>
+</p>
+
+<p>
+  <b>Language:</b>
+  <%=h @translation.language %>
+</p>
+
+<p>
+  <b>Is recommended:</b>
+  <%=h @translation.recommended %>
+</p>
+
+<p>
+  <b>Partofspeech:</b>
+  <%=h @translation.partofspeech %>
+</p>
+
+<p>
+  <b>Grammaticalgender:</b>
+  <%=h @translation.grammaticalgender %>
+</p>
+
+<p>
+  <b>Grammaticalnumber:</b>
+  <%=h @translation.grammaticalnumber %>
+</p>
+
+
+
+<%= link_to 'Edit', edit_translation_path(@translation) %> |
+<%= link_to 'Back', translations_path %>

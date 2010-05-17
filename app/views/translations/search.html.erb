@@ -1,0 +1,58 @@
+<% content_for :header_content do %>
+  <%= javascript_include_tag "cufon-yui", "ar.font" %>
+  <script type="text/javascript">
+    Cufon.replace('h2');
+    $(document).ready(function (){
+      $("#form #string").focus();
+    });
+  </script>
+
+<% end %>
+<%=  render :partial => "layouts/form_search" %>
+<br/>
+<h3>
+Teña en conta que este aplicativo está en versión alfa polo que as buscas que realice pode que non sexan totalmente correctas e que o formato dos resultados non coincida cos resultados finais.
+</h3>
+<div id="results">
+  <% if @results.count > 0 %>
+    <div id="result-search-hint">Atopáronse <%= @results.count %> resultado<%= (@results.count > 1) ? "s": "" %>.</div>
+    <%  @results.each do |resultado| %>
+      <div class="translation" >
+        <div class="translation-content  <%= cycle("odd","even")+" "+ resultado[1].glossary_name %> ">
+
+
+          <h2 class="original-translations"><%= image_tag("languages/gl.png", :size => "16x12") +" "+resultado[0].join("; ") %></h2>
+          <div id="info-concept">
+             <%= ("Glosario: "+resultado[1].glossary_name) if resultado[1].glossary_name != "" %>
+             <%= ("<br/>&Aacute;mbito: "+resultado[1].scope) if resultado[1].scope != "" %>
+        <%= ("<br/>Definición: "+resultado[1].definition) if resultado[1].definition != "" %>
+          </div>
+          <div id="translations">
+            <ul>
+            <% resultado[2].map do |trans| %>
+              <li<%= (trans.recommended ? " class=\"recommended\"" : "") %>><%=  "<strong>"+trans.text+"</strong> "+
+                    (trans.partofspeech != "" ? "<em>#{trans.partofspeech}</em>" : "") +
+                    ((trans.grammaticalgender == "feminine" ) ? " <em>fem.</em>" : "")+
+                    ((trans.grammaticalnumber == "plural" && trans.partofspeech == "noun") ? " <em>plu.</em>" :" <em>sin.</em>")%>
+		 <%= if (trans.recommended) then image_tag("rec.png"); end%></li>
+            <%  end.join("<br/>") %>
+	
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    <%  end %>
+  <%# render :partial => "layouts/pager",
+  :locals => {
+  :element => @final_translations,
+  :back_url => root_url
+  }
+  %>
+  <% else %>
+
+    Non hai traducións para esa entrada <%= link_to 'Facer outra busca', root_url %>
+
+  <% end %>
+</div>
+

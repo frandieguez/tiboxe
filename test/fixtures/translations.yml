@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  text: MyText
+  language: MyText
+  is_recommended: false
+  partofspeech: MyText
+  grammaticalGender: MyText
+  grammaticalNumber: MyText
+
+two:
+  text: MyText
+  language: MyText
+  is_recommended: false
+  partofspeech: MyText
+  grammaticalGender: MyText
+  grammaticalNumber: MyText
