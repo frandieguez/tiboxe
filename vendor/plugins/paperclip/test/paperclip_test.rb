@@ -16,8 +16,8 @@ class PaperclipTest < Test::Unit::TestCase
       should "execute the right command" do
         Paperclip.expects(:path_for_command).with("convert").returns("/usr/bin/convert")
         Paperclip.expects(:bit_bucket).returns("/dev/null")
-        Paperclip.expects(:"`").with("/usr/bin/convert one.jpg two.jpg 2>/dev/null")
-        Paperclip.run("convert", "one.jpg two.jpg")
+        Paperclip.expects(:"`").with("/usr/bin/convert 'one.jpg' 'two.jpg' 2>/dev/null")
+        Paperclip.run("convert", "one.jpg", "two.jpg")
       end
     end
   end
@@ -35,41 +35,40 @@ class PaperclipTest < Test::Unit::TestCase
     should "execute the right command" do
       Paperclip.expects(:path_for_command).with("convert").returns("convert")
       Paperclip.expects(:bit_bucket).returns("/dev/null")
-      Paperclip.expects(:"`").with("convert one.jpg two.jpg 2>/dev/null")
-      Paperclip.run("convert", "one.jpg two.jpg")
+      Paperclip.expects(:"`").with("convert 'one.jpg' 'two.jpg' 2>/dev/null")
+      Paperclip.run("convert", "one.jpg", "two.jpg")
     end
   end
 
   context "Calling Paperclip.run and logging" do
-    setup do
+    should "log the command when :log_command is true" do
       Paperclip.options[:image_magick_path] = nil
       Paperclip.options[:command_path]      = nil
       Paperclip.stubs(:bit_bucket).returns("/dev/null")
-      Paperclip.stubs(:log)
-      Paperclip.stubs(:"`").with("this is the command 2>/dev/null")
-    end
-
-    should "log the command when :log_command is true" do
+      Paperclip.expects(:log).with("this 'is the command' 2>/dev/null")
+      Paperclip.expects(:"`").with("this 'is the command' 2>/dev/null")
       Paperclip.options[:log_command] = true
       Paperclip.run("this","is the command")
-      assert_received(Paperclip, :log) do |p|
-        p.with("this is the command 2>/dev/null")
-      end
-      assert_received(Paperclip, :`) do |p|
-        p.with("this is the command 2>/dev/null")
-      end
     end
 
     should "not log the command when :log_command is false" do
+      Paperclip.options[:image_magick_path] = nil
+      Paperclip.options[:command_path]      = nil
+      Paperclip.stubs(:bit_bucket).returns("/dev/null")
+      Paperclip.expects(:log).with("this 'is the command' 2>/dev/null").never
+      Paperclip.expects(:"`").with("this 'is the command' 2>/dev/null")
       Paperclip.options[:log_command] = false
       Paperclip.run("this","is the command")
-      assert_received(Paperclip, :log) do |p|
-        p.with("this is the command 2>/dev/null").never
-      end
-      assert_received(Paperclip, :`) do |p|
-        p.with("this is the command 2>/dev/null")
-      end
     end
+  end
+
+  should "prevent dangerous characters in the command via quoting" do
+    Paperclip.options[:image_magick_path] = nil
+    Paperclip.options[:command_path]      = nil
+    Paperclip.options[:log_command]       = false
+    Paperclip.options[:swallow_stderr]    = false
+    Paperclip.expects(:"`").with(%q[this 'is' 'jack'\''s' '`command`' 'line!'])
+    Paperclip.run("this", "is", "jack's", "`command`", "line!")
   end
 
   context "Paperclip.bit_bucket" do
@@ -185,45 +184,23 @@ class PaperclipTest < Test::Unit::TestCase
       should "be valid" do
         assert @dummy.valid?
       end
-
-      context "then has a validation added that makes it invalid" do
-        setup do
-          assert @dummy.save
-          Dummy.class_eval do
-            validates_attachment_content_type :avatar, :content_type => ["text/plain"]
-          end
-          @dummy2 = Dummy.find(@dummy.id)
-        end
-
-        should "be invalid when reloaded" do
-          assert ! @dummy2.valid?, @dummy2.errors.inspect
-        end
-
-        should "be able to call #valid? twice without having duplicate errors" do
-          @dummy2.avatar.valid?
-          first_errors = @dummy2.avatar.errors
-          @dummy2.avatar.valid?
-          assert_equal first_errors, @dummy2.avatar.errors
-        end
-      end
     end
 
     context "a validation with an if guard clause" do
       setup do
         Dummy.send(:"validates_attachment_presence", :avatar, :if => lambda{|i| i.foo })
         @dummy = Dummy.new
+        @dummy.stubs(:avatar_file_name).returns(nil)
       end
 
       should "attempt validation if the guard returns true" do
         @dummy.expects(:foo).returns(true)
-        @dummy.avatar.expects(:validate_presence).returns(nil)
-        @dummy.valid?
+        assert ! @dummy.valid?
       end
 
       should "not attempt validation if the guard returns false" do
         @dummy.expects(:foo).returns(false)
-        @dummy.avatar.expects(:validate_presence).never
-        @dummy.valid?
+        assert @dummy.valid?
       end
     end
 
@@ -231,18 +208,17 @@ class PaperclipTest < Test::Unit::TestCase
       setup do
         Dummy.send(:"validates_attachment_presence", :avatar, :unless => lambda{|i| i.foo })
         @dummy = Dummy.new
+        @dummy.stubs(:avatar_file_name).returns(nil)
       end
 
       should "attempt validation if the guard returns true" do
         @dummy.expects(:foo).returns(false)
-        @dummy.avatar.expects(:validate_presence).returns(nil)
-        @dummy.valid?
+        assert ! @dummy.valid?
       end
 
       should "not attempt validation if the guard returns false" do
         @dummy.expects(:foo).returns(true)
-        @dummy.avatar.expects(:validate_presence).never
-        @dummy.valid?
+        assert @dummy.valid?
       end
     end
 
@@ -259,11 +235,11 @@ class PaperclipTest < Test::Unit::TestCase
           end
           if validation == :presence
             should "have an error on the attachment" do
-              assert @dummy.errors.on(:avatar)
+              assert @dummy.errors[:avatar_file_name]
             end
           else
             should "not have an error on the attachment" do
-              assert_nil @dummy.errors.on(:avatar)
+              assert @dummy.errors[:avatar_file_name].blank?, @dummy.errors.full_messages.join(", ")
             end
           end
         end
@@ -273,10 +249,7 @@ class PaperclipTest < Test::Unit::TestCase
             @dummy.valid?
           end
           should "not have an error when assigned a valid file" do
-            assert ! @dummy.avatar.errors.key?(validation)
-          end
-          should "not have an error on the attachment" do
-            assert_nil @dummy.errors.on(:avatar)
+            assert_equal 0, @dummy.errors.length, @dummy.errors.full_messages.join(", ")
           end
         end
         context "and assigned an invalid file" do
@@ -285,17 +258,14 @@ class PaperclipTest < Test::Unit::TestCase
             @dummy.valid?
           end
           should "have an error when assigned a valid file" do
-            assert_not_nil @dummy.avatar.errors[validation]
-          end
-          should "have an error on the attachment" do
-            assert @dummy.errors.on(:avatar)
+            assert @dummy.errors.length > 0
           end
         end
       end
     end
 
     [[:presence,      {},                              "5k.png",   nil],
-     [:size,          {:in => 1..10240},               nil,        "12k.png"],
+     [:size,          {:in => 1..10240},               "5k.png",   "12k.png"],
      [:size,          {:less_than => 10240},           "5k.png",   "12k.png"],
      [:size,          {:greater_than => 8096},         "12k.png",  "5k.png"],
      [:content_type,  {:content_type => "image/png"},  "5k.png",   "text.txt"],
@@ -318,7 +288,7 @@ class PaperclipTest < Test::Unit::TestCase
         end
         
         should "have a file size min/max error message" do
-          assert_match /between 0 and 10240 bytes/, @dummy.errors.on(:avatar)
+          assert @dummy.errors[:avatar_file_size].any?{|e| e.match %r/between 0 and 10240 bytes/ }
         end
       end
     end

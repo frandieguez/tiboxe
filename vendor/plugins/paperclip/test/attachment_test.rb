@@ -11,19 +11,7 @@ class AttachmentTest < Test::Unit::TestCase
     @model = @attachment.instance
     @model.id = 1234
     @model.avatar_file_name = "fake.jpg"
-    assert_equal "#{RAILS_ROOT}/public/fake_models/1234/fake", @attachment.path
-  end
-
-  should "call a proc sent to check_guard" do
-    @dummy = Dummy.new
-    @dummy.expects(:one).returns(:one)
-    assert_equal :one, @dummy.avatar.send(:check_guard, lambda{|x| x.one })
-  end
-
-  should "call a method name sent to check_guard" do
-    @dummy = Dummy.new
-    @dummy.expects(:one).returns(:one)
-    assert_equal :one, @dummy.avatar.send(:check_guard, :one)
+    assert_equal "#{Rails.root}/public/fake_models/1234/fake", @attachment.path
   end
 
   context "Attachment default_options" do
@@ -118,12 +106,11 @@ class AttachmentTest < Test::Unit::TestCase
       @dummy.stubs(:id).returns(@id)
       @file = StringIO.new(".")
       @dummy.avatar = @file
+      Rails.stubs(:env).returns(@rails_env)
     end
 
     should "return the proper path" do
-      temporary_rails_env(@rails_env) {
-        assert_equal "#{@rails_env}/#{@id}.png", @dummy.avatar.path
-      }
+      assert_equal "#{@rails_env}/#{@id}.png", @dummy.avatar.path
     end
   end
 
@@ -162,11 +149,6 @@ class AttachmentTest < Test::Unit::TestCase
     should "report the correct options when sent #extra_options_for(:large)" do
       assert_equal "-do_stuff", @dummy.avatar.send(:extra_options_for, :large)
     end
-
-    before_should "call extra_options_for(:thumb/:large)" do
-      Paperclip::Attachment.any_instance.expects(:extra_options_for).with(:thumb)
-      Paperclip::Attachment.any_instance.expects(:extra_options_for).with(:large)
-    end
   end
 
   context "An attachment with :convert_options that is a proc" do
@@ -193,11 +175,6 @@ class AttachmentTest < Test::Unit::TestCase
 
     should "report the correct options when sent #extra_options_for(:large)" do
       assert_equal "-all", @dummy.avatar.send(:extra_options_for, :large)
-    end
-
-    before_should "call extra_options_for(:thumb/:large)" do
-      Paperclip::Attachment.any_instance.expects(:extra_options_for).with(:thumb)
-      Paperclip::Attachment.any_instance.expects(:extra_options_for).with(:large)
     end
   end
   
@@ -267,10 +244,6 @@ class AttachmentTest < Test::Unit::TestCase
         @attachment = Dummy.new.avatar
       end
 
-      should "not run the procs immediately" do
-        assert_kind_of Proc, @attachment.styles[:normal][:geometry]
-      end
-
       context "when assigned" do
         setup do
           @file = StringIO.new(".")
@@ -305,10 +278,6 @@ class AttachmentTest < Test::Unit::TestCase
     setup do
       rebuild_model :styles => { :normal => '' }, :processors => lambda { |a| [ :test ] }
       @attachment = Dummy.new.avatar
-    end
-
-    should "not run the proc immediately" do
-      assert_kind_of Proc, @attachment.styles[:normal][:processors]
     end
 
     context "when assigned" do
@@ -354,19 +323,22 @@ class AttachmentTest < Test::Unit::TestCase
       setup { @dummy.avatar = @file }
 
       before_should "call #make on all specified processors" do
+        Paperclip::Thumbnail.expects(:make).with(any_parameters).returns(@file)
+        Paperclip::Test.expects(:make).with(any_parameters).returns(@file)
+      end
+      
+      before_should "call #make with the right parameters passed as second argument" do
         expected_params = @style_params[:once].merge({:processors => [:thumbnail, :test], :whiny => true, :convert_options => ""})
-        Paperclip::Thumbnail.expects(:make).with(@file, expected_params, @dummy.avatar).returns(@file)
-        Paperclip::Test.expects(:make).with(@file, expected_params, @dummy.avatar).returns(@file)
+        Paperclip::Thumbnail.expects(:make).with(anything, expected_params, anything).returns(@file)
       end
       
       before_should "call #make with attachment passed as third argument" do
-        expected_params = @style_params[:once].merge({:processors => [:thumbnail, :test], :whiny => true, :convert_options => ""})
-        Paperclip::Test.expects(:make).with(@file, expected_params, @dummy.avatar).returns(@file)
+        Paperclip::Test.expects(:make).with(anything, anything, @dummy.avatar).returns(@file)
       end
     end
   end
 
-  context "An attachment with no processors defined" do
+  context "An attachment with styles but no processors defined" do
     setup do
       rebuild_model :processors => [], :styles => {:something => 1}
       @dummy = Dummy.new
@@ -377,9 +349,20 @@ class AttachmentTest < Test::Unit::TestCase
     end
   end
 
+  context "An attachment without styles and with no processors defined" do
+    setup do
+      rebuild_model :processors => [], :styles => {}
+      @dummy = Dummy.new
+      @file = StringIO.new("...")
+    end
+    should "not raise when assigned to" do
+      @dummy.avatar = @file
+    end
+  end
+
   context "Assigning an attachment with post_process hooks" do
     setup do
-      rebuild_model :styles => { :something => "100x100#" }
+      rebuild_class :styles => { :something => "100x100#" }
       Dummy.class_eval do
         before_avatar_post_process :do_before_avatar
         after_avatar_post_process :do_after_avatar
@@ -419,16 +402,16 @@ class AttachmentTest < Test::Unit::TestCase
       @dummy.expects(:do_before_avatar).never
       @dummy.expects(:do_after_avatar).never
       @dummy.expects(:do_before_all).with().returns(false)
-      @dummy.expects(:do_after_all).never
+      @dummy.expects(:do_after_all)
       Paperclip::Thumbnail.expects(:make).never
       @dummy.avatar = @file
     end
 
     should "cancel the processing if a before_avatar_post_process returns false" do
       @dummy.expects(:do_before_avatar).with().returns(false)
-      @dummy.expects(:do_after_avatar).never
+      @dummy.expects(:do_after_avatar)
       @dummy.expects(:do_before_all).with().returns(true)
-      @dummy.expects(:do_after_all).never
+      @dummy.expects(:do_after_all)
       Paperclip::Thumbnail.expects(:make).never
       @dummy.avatar = @file
     end
@@ -438,15 +421,11 @@ class AttachmentTest < Test::Unit::TestCase
     setup do
       rebuild_model :styles => { :something => "100x100#" }
       @file  = StringIO.new(".")
-      @file.expects(:original_filename).returns("5k.png\n\n")
-      @file.expects(:content_type).returns("image/png\n\n")
+      @file.stubs(:original_filename).returns("5k.png\n\n")
+      @file.stubs(:content_type).returns("image/png\n\n")
       @file.stubs(:to_tempfile).returns(@file)
       @dummy = Dummy.new
       Paperclip::Thumbnail.expects(:make).returns(@file)
-      @dummy.expects(:run_callbacks).with(:before_avatar_post_process, {:original => @file})
-      @dummy.expects(:run_callbacks).with(:before_post_process, {:original => @file})
-      @dummy.expects(:run_callbacks).with(:after_avatar_post_process, {:original => @file, :something => @file})
-      @dummy.expects(:run_callbacks).with(:after_post_process, {:original => @file, :something => @file})
       @attachment = @dummy.avatar
       @dummy.avatar = @file
     end
@@ -478,15 +457,12 @@ class AttachmentTest < Test::Unit::TestCase
       @attachment.expects(:valid_assignment?).with(@not_file).returns(true)
       @attachment.expects(:queue_existing_for_delete)
       @attachment.expects(:post_process)
-      @attachment.expects(:valid?).returns(true)
-      @attachment.expects(:validate)
       @dummy.avatar = @not_file
     end
     
-    should "remove strange letters and replace with underscore (_)" do
-      assert_equal "sheep_say_b_.png", @dummy.avatar.original_filename
+    should "not remove strange letters" do
+      assert_equal "sheep_say_bæ.png", @dummy.avatar.original_filename
     end
-    
   end
 
   context "An attachment" do
@@ -498,6 +474,7 @@ class AttachmentTest < Test::Unit::TestCase
       FileUtils.rm_rf("tmp")
       rebuild_model
       @instance = Dummy.new
+      @instance.stubs(:id).returns 123
       @attachment = Paperclip::Attachment.new(:avatar, @instance)
       @file = File.new(File.join(File.dirname(__FILE__), "fixtures", "5k.png"), 'rb')
     end
@@ -606,6 +583,7 @@ class AttachmentTest < Test::Unit::TestCase
             should "commit the files to disk" do
               [:large, :medium, :small].each do |style|
                 io = @attachment.to_file(style)
+                # p "in commit to disk test, io is #{io.inspect} and @instance.id is #{@instance.id}"
                 assert File.exists?(io)
                 assert ! io.is_a?(::Tempfile)
                 io.close

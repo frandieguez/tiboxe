@@ -9,32 +9,26 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091116174110) do
+ActiveRecord::Schema.define(:version => 20091105200008) do
 
   create_table "concepts", :force => true do |t|
-    t.text    "scope"
-    t.text    "definition"
-    t.text    "example"
-    t.text    "glossary_name"
-    t.boolean "is_free",       :null => false
+    t.string   "scope"
+    t.text     "definition"
+    t.text     "example"
+    t.string   "glossary_name"
+    t.boolean  "is_free",       :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "translations", :force => true do |t|
-    t.text    "text"
-    t.text    "language"
-    t.boolean "recommended"
-    t.text    "partofspeech"
-    t.text    "grammaticalgender"
-    t.text    "grammaticalnumber"
-    t.integer "concept_id"
-  end
-
-  create_table "users", :force => true do |t|
-    t.string   "username"
-    t.string   "email"
-    t.string   "password"
-    t.string   "password_salt"
-    t.string   "persistence_token"
+    t.text     "text"
+    t.string   "language",          :limit => 10
+    t.boolean  "recommended"
+    t.string   "partofspeech",      :limit => 25
+    t.string   "grammaticalgender", :limit => 25
+    t.string   "grammaticalnumber", :limit => 25
+    t.integer  "concept_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
