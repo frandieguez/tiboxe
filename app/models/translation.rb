@@ -14,15 +14,17 @@ class Translation < ActiveRecord::Base
       original_concepts_translations.each do |translations|
 
         concept = Concept.find_by_id(translations.concept_id)
-        if (concept.is_free or non_free==true)
+        #if (concept.is_free or non_free==true)
 
           original_translations = Translation.find(:all, :conditions => { :concept_id => translations.concept_id, :language => "en"}).map do |translation|
             translation.text
           end
+          logger.info 'informational message'
+
           final_translations = Translation.find(:all, :order => "recommended DESC", :conditions => { :concept_id => translations.concept_id, :language => "gl"})
 
           results << [original_translations, concept, final_translations ]
-        end
+        #end
       end
       results
     else

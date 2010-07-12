@@ -1,0 +1,24 @@
+# Typus Models Configuration File
+#
+# Use the README file as a reference to customize settings.
+
+Concept:
+  fields:
+    list: scope, glossary_name, is_free
+    form: scope, definition, example, glossary_name, is_free
+  order_by: 
+  relationships: translations
+  filters: 
+  search: 
+  application: tiboxe
+
+Translation:
+  fields:
+    list: recommended, concept
+    form: text, language, recommended, partofspeech, grammaticalgender, grammaticalnumber, concept
+  order_by: 
+  relationships: concept
+  filters: 
+  search: 
+  application: tiboxe
+

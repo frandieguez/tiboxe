@@ -6,8 +6,7 @@ class TranslationsController < ApplicationController
   # GET /search/id
   def search
 
-    
-    @results ||= Translation.find_fuzzy_translations_for(params[:string], params[:non_free])
+    @results ||= Translation.find_fuzzy_translations_for(@string_to_search, params[:non_free])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -19,8 +18,12 @@ class TranslationsController < ApplicationController
 
   def param_string_blank
 
-    logger.info "Redirixindo a root_url xa que params string é '"+params[:string].to_s+"'";
-    redirect_to root_url if (params[:string].blank?)
+    @string_to_search = params[:string].strip
+
+    if ( (@string_to_search.blank?) or (@string_to_search.length < 2) )
+        logger.info "Redirixindo a root_url xa que params string é '"+params[:string].to_s+"'";
+        redirect_to root_url	
+    end
 
   end
 end
