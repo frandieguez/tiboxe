@@ -1,1 +1,13 @@
-Fran Dieguez <frandieguez@gnome.org>
+/* the humans responsible & colophon */
+/* humanstxt.org */
+
+/* TEAM */
+    Your title: Francisco Diéguez.
+    Site: frandieguez@gnome.org
+    Twitter: frandieguez
+                          
+/* SITE */
+    Last update: 2011/10/16
+    Standards: HTML5, CSS3,..
+    Components: Modernizr, jQuery, etc.
+    Software: Komodo IDE, Ubuntu, etc.
